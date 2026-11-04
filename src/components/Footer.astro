@@ -1,0 +1,29 @@
+---
+import { Image } from "astro:assets";
+import savoraLogo from "../assets/savora-logo.png";
+import { event } from "../data/event";
+---
+<footer>
+  <div class="host">
+    <span>Hosted by Savora Coffee &amp; Patisserie, Kunnamangalam</span>
+    <span><a href={event.siteUrl} target="_blank" rel="noopener">savoracafe.in</a> · <a href={`https://www.instagram.com/${event.instagramHandle}`} target="_blank" rel="noopener">@{event.instagramHandle}</a></span>
+  </div>
+  <div class="marks">
+    <a class="savora-mark" href={event.siteUrl} target="_blank" rel="noopener"><Image src={savoraLogo} alt="Savora" width={264} /></a>
+    <div class="sig">MAD ALICE</div>
+  </div>
+</footer>
+
+<style>
+footer{border-top:1px solid var(--line);padding-top:28px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:end}
+.host{display:grid;gap:4px;font-size:14px;color:var(--muted)}
+.host a{text-underline-offset:3px}
+.sig{font-family:var(--font-dj);font-weight:800;font-size:22px;letter-spacing:.06em;text-transform:uppercase}
+.marks{display:grid;gap:10px;justify-items:end}
+.savora-mark :global(img){display:block;width:132px;height:auto}
+@media (max-width:720px){
+  /* Footer marks share one row: Savora on the left edge, MAD ALICE on the right */
+  .marks{width:100%;grid-template-columns:auto auto;justify-content:space-between;align-items:center;margin-top:8px}
+  .savora-mark :global(img){width:112px}
+}
+</style>

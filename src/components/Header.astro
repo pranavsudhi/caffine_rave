@@ -1,0 +1,29 @@
+---
+import { Image } from "astro:assets";
+import savoraLogo from "../assets/savora-logo.png";
+import WhatsAppIcon from "./WhatsAppIcon.astro";
+import { event } from "../data/event";
+---
+<header class="topbar">
+  <div class="topbar-in">
+    <a class="topbar-logo" href={event.siteUrl} target="_blank" rel="noopener"><Image src={savoraLogo} alt="Savora" width={236} loading="eager" /></a>
+    <a class="topbar-wa" href={event.whatsappUrl} target="_blank" rel="noopener">
+      <WhatsAppIcon />
+      <span>Book on WhatsApp</span>
+    </a>
+  </div>
+</header>
+
+<style>
+/* Top bar: Savora logo on the left, WhatsApp booking on the right; stays pinned while scrolling */
+.topbar{position:sticky;top:0;z-index:10;margin-inline:calc(-1 * max(16px,env(safe-area-inset-left,0px)));
+  padding-inline:max(16px,env(safe-area-inset-left,0px));
+  background:rgba(19,13,10,.78);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.topbar-in{max-width:1080px;margin:0 auto;height:64px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.topbar-logo :global(img){display:block;width:118px;height:auto}
+.topbar-wa{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;
+  color:var(--crema);border:1px solid var(--crema);padding:9px 14px;transition:background .2s,color .2s}
+.topbar-wa :global(svg){width:16px;height:16px;flex:none}
+.topbar-wa:hover{background:var(--crema);color:var(--bg)}
+@media (max-width:420px){.topbar-in{height:56px}.topbar-logo :global(img){width:96px}.topbar-wa{font-size:11px;padding:8px 10px;letter-spacing:.08em}}
+</style>

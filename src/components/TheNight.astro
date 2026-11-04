@@ -1,0 +1,27 @@
+---
+import { event } from "../data/event";
+---
+<section aria-labelledby="night-h">
+  <div class="two">
+    <div class="sec-head">
+      <p class="eyebrow">The night</p>
+      <h2 class="small" id="night-h">One hour, one room</h2>
+    </div>
+    <dl class="details">
+      <div><dt>Date</dt><dd>{event.dateLabel}<small>{event.dayLabel}</small></dd></div>
+      <div><dt>Time</dt><dd>{event.timeLabel}</dd></div>
+      <div><dt>Place</dt><dd>{event.venue}<small>{event.venueNote} · <a href={event.mapUrl} target="_blank" rel="noopener">Open in Google Maps</a></small></dd></div>
+      <div><dt>Entry</dt><dd>₹{event.entryPrice}<small>{event.entryNote}</small></dd></div>
+    </dl>
+  </div>
+</section>
+
+<style>
+.details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));margin:0}
+.details div{padding:20px 20px 20px 0;border-top:1px solid var(--line);min-width:0}
+.details dt{font-family:var(--font-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.details dd{margin:6px 0 0;font-family:var(--font-dj);font-weight:800;font-size:clamp(26px,3.2vw,34px);line-height:1.05;text-transform:uppercase;font-variant-numeric:tabular-nums}
+.details dd small{display:block;font-family:var(--font-body);font-weight:400;font-size:14px;line-height:1.45;text-transform:none;color:var(--muted);margin-top:8px}
+.details dd a{color:var(--crema);text-underline-offset:3px}
+@media (max-width:560px){.details{grid-template-columns:1fr}}
+</style>

@@ -1,0 +1,86 @@
+---
+import { Image } from "astro:assets";
+import sunset from "../assets/athira-sunset.jpg";
+import { event } from "../data/event";
+---
+<section class="dj" aria-labelledby="dj-h">
+  <div class="dj-story">
+    <div class="sec-head">
+      <p class="eyebrow">Live techno set</p>
+      <h2 id="dj-h">{event.dj}<span class="dot">.</span></h2>
+      <p class="caption">Creating the journeys, I once needed.</p>
+    </div>
+    <div class="bio">
+      <p>Mad Alice plays techno nights in Bengaluru. For one night, she’s bringing her set to a coffee bar in Kunnamangalam.</p>
+      <p>Expect a full hour of music, freshly pulled espresso and a room that’s small enough for everyone to know they were there.</p>
+    </div>
+  </div>
+  <div class="dj-photo"><Image src={sunset} alt="MAD ALICE with headphones on a palm-lined path at sunset"
+    widths={[420, 640, 869]} sizes="(max-width:820px) min(420px, 100vw), 50vw" /></div>
+  <div class="dj-banner"><canvas id="logo" role="img" aria-label="MAD ALICE logo"></canvas></div>
+</section>
+
+<script>
+  /* ---- MAD ALICE logo, drawn as on the MAD ALICE press page ---- */
+  function drawLogo(canvas: HTMLCanvasElement, ink: string) {
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    const size = 330, pad = 60, r = 262, gap = 80;
+    const font = "800 " + size + 'px "Big Shoulders Display", "Arial Narrow", Impact, sans-serif';
+    ctx.font = font;
+    const wMad = ctx.measureText("MAD").width, wAlice = ctx.measureText("ALICE").width;
+    const cap = size * 0.72, lineGap = 44, textX = pad + r * 2 + gap;
+    const W = Math.ceil(textX + Math.max(wMad, wAlice) + pad);
+    const H = Math.ceil(Math.max(pad * 2 + cap * 2 + lineGap, pad * 2 + r * 2));
+    canvas.width = W; canvas.height = H; ctx.clearRect(0, 0, W, H);
+    const lx = pad + r, ly = H / 2;
+    ctx.strokeStyle = ink; ctx.lineWidth = 46; ctx.beginPath(); ctx.arc(lx, ly, r - 23, 0, Math.PI * 2); ctx.stroke();
+    ctx.lineWidth = 12; ctx.beginPath(); ctx.arc(lx, ly, r * 0.58, 0, Math.PI * 2); ctx.stroke();
+    ctx.fillStyle = "#e0954a"; ctx.beginPath(); ctx.arc(lx, ly, r * 0.2, 0, Math.PI * 2); ctx.fill();
+    ctx.font = font; ctx.fillStyle = ink; ctx.textBaseline = "alphabetic";
+    const top = (H - (cap * 2 + lineGap)) / 2;
+    ctx.fillText("MAD", textX, top + cap); ctx.fillText("ALICE", textX, top + cap * 2 + lineGap);
+  }
+  const logo = document.getElementById("logo") as HTMLCanvasElement | null;
+  if (logo) {
+    drawLogo(logo, "#f1e6da");
+    document.fonts?.load('800 100px "Big Shoulders Display"').catch(() => {}).then(() => drawLogo(logo, "#f1e6da"));
+  }
+
+  /* ---- Fade the MAD ALICE photo in as it scrolls into view ---- */
+  const djPhoto = document.querySelector(".dj-photo");
+  if (djPhoto) {
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { djPhoto.classList.add("in"); io.disconnect(); } }), { threshold: .2 });
+      io.observe(djPhoto);
+    } else djPhoto.classList.add("in");
+  }
+</script>
+
+<style>
+/* Lineup: story on the left, the sunset photo beside it dissolving into the ground; the logo banner runs underneath */
+.caption{font-size:clamp(18px,2.4vw,22px);color:var(--muted);margin:0;max-width:34ch;font-style:italic;text-wrap:balance}
+.bio{display:grid;gap:14px;max-width:58ch}
+.bio p{margin:0;font-size:17px}
+h2 .dot{color:#e0954a}
+.dj{grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:clamp(24px,5vw,64px);align-items:center}
+.dj-story{display:grid;gap:28px;min-width:0}
+.dj-photo{min-width:0;display:flex;justify-content:center}
+.dj-photo :global(img){width:100%;height:auto;display:block;filter:sepia(.12) saturate(.95) brightness(.94);
+  -webkit-mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.4) 10%,#000 26%,#000 84%,transparent 100%),
+                     linear-gradient(to bottom,transparent 0%,#000 14%,#000 80%,transparent 100%);
+  -webkit-mask-composite:source-in;
+          mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.4) 10%,#000 26%,#000 84%,transparent 100%),
+                     linear-gradient(to bottom,transparent 0%,#000 14%,#000 80%,transparent 100%);
+          mask-composite:intersect;
+  opacity:0;transform:scale(1.04);transition:opacity 1.6s ease,transform 1.8s cubic-bezier(.2,.7,.2,1)}
+.dj-photo.in :global(img){opacity:1;transform:none}
+.dj-banner{grid-column:1/-1;display:flex;justify-content:center;align-items:center;padding:20px 24px;margin-top:12px;
+  background:linear-gradient(90deg,transparent,var(--surface) 20%,var(--surface) 80%,transparent)}
+.dj-banner canvas{width:100%;max-width:240px;height:auto;display:block}
+@media (max-width:820px){
+  .dj{grid-template-columns:1fr}
+  .dj-photo :global(img){max-width:420px}
+}
+@media (prefers-reduced-motion:reduce){.dj-photo :global(img){opacity:1;transform:none}}
+</style>

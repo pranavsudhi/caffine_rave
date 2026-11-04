@@ -1,0 +1,18 @@
+---
+import WhatsAppIcon from "./WhatsAppIcon.astro";
+import { event } from "../data/event";
+---
+<div class="closing">
+  <h2>Would you be in?</h2>
+  <a class="cta wa" href={event.whatsappUrl} target="_blank" rel="noopener">
+    <WhatsAppIcon />
+    Ask for a spot on WhatsApp
+  </a>
+  <p class="spots">WhatsApp {event.whatsappDisplay}</p>
+</div>
+
+<style>
+.closing{display:grid;justify-items:center;text-align:center;gap:24px;border-top:1px solid var(--line);padding-top:clamp(40px,7vw,80px)}
+.closing h2{font-family:var(--font-display);font-weight:900}
+.closing .cta{justify-self:center}
+</style>

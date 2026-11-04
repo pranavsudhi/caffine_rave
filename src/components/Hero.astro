@@ -1,0 +1,75 @@
+---
+import { Image } from "astro:assets";
+import booth from "../assets/athira-booth.png";
+import Countdown from "./Countdown.astro";
+import WhatsAppIcon from "./WhatsAppIcon.astro";
+import { event } from "../data/event";
+---
+<header class="hero">
+  <div class="hero-photo">
+    <Image src={booth} alt="MAD ALICE at a Pioneer DJ setup under warm stage lights"
+      widths={[480, 720, 1023]} sizes="(max-width:720px) 100vw, 560px" priority />
+  </div>
+  <div class="hero-text">
+    <div class="hero-title">
+      <p class="eyebrow">A coffee rave by {event.host}</p>
+      <h1>Caffeine<span class="alt">&amp; Beats</span></h1>
+      <p class="tag">Sip. Rave. Repeat.</p>
+    </div>
+    <p class="lede">One night, one dance floor, one perfect cup. A live techno set by {event.dj}, right here in Kunnamangalam.</p>
+    <a class="cta wa" href={event.whatsappUrl} target="_blank" rel="noopener">
+      <WhatsAppIcon />
+      Ask for a spot on WhatsApp
+    </a>
+    <p class="spots">About {event.spots} spots. Guest list only.</p>
+    <Countdown />
+  </div>
+</header>
+
+<style>
+/* Hero: the booth photo dissolves into the espresso ground on every edge; the headline sits over its faded left side */
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:auto;min-height:clamp(600px,80vw,880px);margin-top:calc(-1 * clamp(36px,7vw,88px));position:relative}
+/* The whole photo is shown uncropped; every edge fades to fully transparent so no seam shows at any width.
+   The bottom fade is kept short so the DJ deck stays clear. */
+.hero-photo{position:absolute;top:0;right:0;height:100%;aspect-ratio:1023/1537;max-width:100%;
+  animation:photoIn 2.2s cubic-bezier(.2,.7,.2,1) both}
+.hero-photo :global(img){width:100%;height:100%;object-fit:cover;display:block;
+  filter:sepia(.18) saturate(.92) brightness(.92);
+  -webkit-mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.35) 14%,#000 34%,#000 80%,transparent 100%),
+                     linear-gradient(to bottom,transparent 0%,#000 16%,#000 95%,transparent 100%);
+  -webkit-mask-composite:source-in;
+          mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.35) 14%,#000 34%,#000 80%,transparent 100%),
+                     linear-gradient(to bottom,transparent 0%,#000 16%,#000 95%,transparent 100%);
+          mask-composite:intersect}
+.hero-text{grid-column:1;grid-row:1;align-self:end;display:grid;gap:20px;min-width:0;position:relative;z-index:1;padding-bottom:clamp(8px,3vw,32px);
+  animation:textIn 1.4s ease-out .9s both}
+.hero-title{display:grid;gap:20px}
+.tag{font-family:var(--font-mono);font-size:14px;letter-spacing:.16em;text-transform:uppercase;margin:0}
+.lede{margin:0;max-width:36ch;font-size:clamp(17px,2vw,19px);color:var(--fg)}
+
+@media (max-width:720px){
+  .hero{grid-template-columns:1fr;grid-template-rows:auto;height:auto;min-height:0}
+  .hero-photo{position:relative;grid-column:1;grid-row:1;width:100%;height:auto}
+  .hero-photo :global(img){-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 12%,#000 88%,transparent 100%),
+                                     linear-gradient(to bottom,transparent 0%,#000 12%,#000 95%,transparent 100%);
+                          mask-image:linear-gradient(to right,transparent 0%,#000 12%,#000 88%,transparent 100%),
+                                     linear-gradient(to bottom,transparent 0%,#000 12%,#000 95%,transparent 100%)}
+  /* The foot of the photo (the deck) melts into the page's espresso ground so the title rises out of it */
+  .hero-photo::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(to top,var(--bg) 0%,rgba(19,13,10,.9) 5%,rgba(19,13,10,.68) 11%,rgba(19,13,10,.32) 18%,rgba(19,13,10,0) 26%)}
+  .hero-text{grid-column:1;grid-row:2;margin-top:-44px}
+  /* Phones: the title tucks just onto the foot of the photo, in a dark espresso pool with a cocoa glow behind the name */
+  .hero-title{gap:16px;position:relative;isolation:isolate}
+  .hero-title::before{content:"";position:absolute;z-index:-1;pointer-events:none;
+    left:-16px;right:-8px;top:-64px;bottom:-26px;
+    background:radial-gradient(ellipse 66% 58% at 38% 50%,rgba(13,9,7,.92) 0%,rgba(19,13,10,.78) 45%,rgba(19,13,10,.32) 75%,rgba(19,13,10,0) 100%)}
+  .hero-title::after{content:"";position:absolute;z-index:-1;pointer-events:none;
+    left:-16px;right:26%;top:28px;bottom:32px;
+    background:radial-gradient(closest-side,rgba(128,76,41,.95) 0%,rgba(122,72,39,.88) 38%,rgba(108,64,35,.62) 64%,rgba(92,55,33,.26) 85%,rgba(92,55,33,0) 100%)}
+  .hero-title .eyebrow,.hero-title h1{text-shadow:0 2px 14px rgba(19,13,10,.55)}
+  /* The small line sits just below the deck, inside the dark pool, in a brighter crema */
+  .hero-title .eyebrow{color:#f2c08a;font-weight:500;letter-spacing:.16em;
+    text-shadow:0 0 10px rgba(242,192,138,.25),0 1px 3px rgba(19,13,10,.95),0 0 14px rgba(19,13,10,.7)}
+}
+@media (prefers-reduced-motion:reduce){.hero-photo,.hero-text{animation:none}}
+</style>

@@ -1,0 +1,26 @@
+---
+import { event } from "../data/event";
+---
+<section class="faq" aria-labelledby="faq-h">
+  <div class="two">
+    <div class="sec-head">
+      <p class="eyebrow">FAQ</p>
+      <h2 class="small" id="faq-h">Good to know</h2>
+    </div>
+    <div>
+      <details id="faq-coffee"><summary>Which coffee is included?</summary><p>Your ₹{event.entryPrice} entry includes one coffee from the event menu. We’ll share the menu closer to the night.</p></details>
+      <details id="faq-walkin"><summary>Can I just walk in on the night?</summary><p>Entry is by guest list only, so please message us on WhatsApp to request a spot.</p></details>
+      <details id="faq-size"><summary>How many people will be there?</summary><p>About {event.spots} guests. We’re keeping it small so there’s room to dance.</p></details>
+    </div>
+  </div>
+</section>
+
+<style>
+.faq details{border-top:1px solid var(--line);padding:18px 0}
+.faq details:last-child{border-bottom:1px solid var(--line)}
+.faq summary{cursor:pointer;font-weight:600;font-size:17px;list-style:none;display:flex;justify-content:space-between;gap:16px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-family:var(--font-mono);color:var(--crema)}
+.faq details[open] summary::after{content:"–"}
+.faq p{margin:10px 0 0;color:var(--muted);max-width:60ch}
+</style>

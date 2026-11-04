@@ -23,6 +23,17 @@ body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size
 body::after{content:"";position:fixed;inset:0;pointer-events:none;
   background:radial-gradient(55% 40% at 15% 0%,rgba(217,154,91,.12),transparent 70%);}
 a{color:inherit}
+/* Top bar: Savora logo on the left, WhatsApp booking on the right; stays pinned while scrolling */
+.topbar{position:sticky;top:0;z-index:10;margin-inline:calc(-1 * max(16px,env(safe-area-inset-left,0px)));
+  padding-inline:max(16px,env(safe-area-inset-left,0px));
+  background:rgba(19,13,10,.78);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.topbar-in{max-width:1080px;margin:0 auto;height:64px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.topbar-logo img{display:block;width:118px;height:auto}
+.topbar-wa{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;
+  color:var(--crema);border:1px solid var(--crema);padding:9px 14px;transition:background .2s,color .2s}
+.topbar-wa svg{width:16px;height:16px;flex:none}
+.topbar-wa:hover{background:var(--crema);color:var(--bg)}
+@media (max-width:420px){.topbar-in{height:56px}.topbar-logo img{width:96px}.topbar-wa{font-size:11px;padding:8px 10px;letter-spacing:.08em}}
 .wrap{max-width:1080px;margin:0 auto;padding-block:clamp(36px,7vw,88px) 48px;display:grid;gap:clamp(48px,8vw,96px);position:relative;z-index:1}
 
 .eyebrow{font-family:var(--font-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--crema);margin:0}
@@ -33,7 +44,7 @@ h2{font-family:var(--font-dj);font-weight:800;font-size:clamp(56px,10vw,120px);l
 h2.small{font-weight:500;font-size:clamp(30px,4.5vw,44px);letter-spacing:.04em;line-height:1}
 
 /* Hero: the booth photo dissolves into the espresso ground on every edge; the headline sits over its faded left side */
-.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr);height:clamp(600px,80vw,880px);margin-top:calc(-1 * clamp(36px,7vw,88px));position:relative}
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:auto;min-height:clamp(600px,80vw,880px);margin-top:calc(-1 * clamp(36px,7vw,88px));position:relative}
 /* The whole photo is shown uncropped; every edge fades to fully transparent so no seam shows at any width.
    The bottom fade is kept short so the DJ deck stays clear. */
 .hero-photo{position:absolute;top:0;right:0;height:100%;aspect-ratio:1023/1537;max-width:100%;
@@ -52,6 +63,17 @@ h2.small{font-weight:500;font-size:clamp(30px,4.5vw,44px);letter-spacing:.04em;l
 .tag{font-family:var(--font-mono);font-size:14px;letter-spacing:.16em;text-transform:uppercase;margin:0}
 .lede{margin:0;max-width:36ch;font-size:clamp(17px,2vw,19px);color:var(--fg)}
 .spots{margin:0;font-size:14px;color:var(--muted)}
+/* Countdown to 10:30 PM IST, 13 Nov 2026. On laptops it heads the landing text (order:-1, above the eyebrow);
+   on phones it drops back under the booking button (see the 720px rules) */
+.countdown{order:-1;display:grid;gap:12px;justify-self:start;margin-bottom:clamp(12px,2.5vw,28px)}
+.countdown[hidden]{display:none}
+.cd-label{margin:0;font-family:var(--font-mono);font-size:clamp(14px,1.3vw,16px);font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--crema)}
+.cd-units{display:flex;align-items:flex-start}
+.cd-unit{display:grid;justify-items:center;gap:6px;min-width:clamp(60px,6.5vw,92px);padding:0 clamp(12px,1.8vw,22px);border-left:1px solid var(--line)}
+.cd-unit:first-child{padding-left:0;border-left:0;justify-items:start}
+.cd-num{font-family:var(--font-dj);font-weight:800;font-size:clamp(44px,5.4vw,72px);line-height:.9;color:var(--fg);font-variant-numeric:tabular-nums}
+.cd-name{font-family:var(--font-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:rgba(241,230,218,.42)}
+.countdown.live .cd-units{display:none}
 @keyframes photoIn{from{opacity:0;transform:scale(1.06);filter:blur(10px)}to{opacity:1;transform:none;filter:none}}
 @keyframes textIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 
@@ -129,7 +151,12 @@ footer{border-top:1px solid var(--line);padding-top:28px;display:flex;justify-co
   .dj-photo img{max-width:420px}
 }
 @media (max-width:720px){
-  .hero{grid-template-columns:1fr;grid-template-rows:auto;height:auto}
+  .hero{grid-template-columns:1fr;grid-template-rows:auto;height:auto;min-height:0}
+  /* Phones: the countdown floats over the lower photo (her waist, above the deck) on a soft espresso wash */
+  .countdown{position:absolute;left:0;bottom:calc(100% + 34px);z-index:2;margin:0;isolation:isolate}
+  .countdown::before{content:"";position:absolute;inset:-28px -40px -24px -24px;z-index:-1;pointer-events:none;
+    background:radial-gradient(closest-side,rgba(19,13,10,.62) 0%,rgba(19,13,10,.45) 50%,rgba(19,13,10,.16) 80%,rgba(19,13,10,0) 100%)}
+  .cd-num{text-shadow:0 2px 12px rgba(19,13,10,.6)}
   .hero-photo{position:relative;grid-column:1;grid-row:1;width:100%;height:auto}
   .hero-photo img{-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 12%,#000 88%,transparent 100%),
                                      linear-gradient(to bottom,transparent 0%,#000 12%,#000 95%,transparent 100%);
@@ -164,6 +191,15 @@ footer{border-top:1px solid var(--line);padding-top:28px;display:flex;justify-co
 @media (prefers-reduced-motion:reduce){*{transition:none!important}.hero-photo,.hero-text{animation:none}.dj-photo img{opacity:1;transform:none}}
 </style>
 
+<header class="topbar">
+  <div class="topbar-in">
+    <a class="topbar-logo" href="https://www.savoracafe.in/" target="_blank" rel="noopener"><img src="photos/savora-logo.png" alt="Savora" width="1151" height="189"></a>
+    <a class="topbar-wa" href="https://wa.me/919746363111?text=Hi%20Savora%2C%20I%27d%20like%20a%20spot%20at%20Caffeine%20%26%20Beats." target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.500-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.300.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.200 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7.5-.1 1.500-.6 1.8-1.2.2-.6.2-1.1.1-1.2l-.4-.2Z"/></svg>
+      <span>Book on WhatsApp</span>
+    </a>
+  </div>
+</header>
 <main class="wrap">
   <header class="hero">
     <div class="hero-photo"><img src="photos/athira-booth.png" alt="MAD ALICE at a Pioneer DJ setup under warm stage lights" width="1023" height="1537" fetchpriority="high"></div>
@@ -179,6 +215,15 @@ footer{border-top:1px solid var(--line);padding-top:28px;display:flex;justify-co
         Ask for a spot on WhatsApp
       </a>
       <p class="spots">About 20 spots. Guest list only.</p>
+      <div class="countdown" id="countdown" role="timer" aria-label="Time until Caffeine &amp; Beats starts" hidden>
+        <p class="cd-label">The first drop in</p>
+        <div class="cd-units">
+          <div class="cd-unit"><span class="cd-num" data-u="d">00</span><span class="cd-name">Days</span></div>
+          <div class="cd-unit"><span class="cd-num" data-u="h">00</span><span class="cd-name">Hours</span></div>
+          <div class="cd-unit"><span class="cd-num" data-u="m">00</span><span class="cd-name">Mins</span></div>
+          <div class="cd-unit"><span class="cd-num" data-u="s">00</span><span class="cd-name">Secs</span></div>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -189,9 +234,9 @@ footer{border-top:1px solid var(--line);padding-top:28px;display:flex;justify-co
         <h2 class="small" id="night-h">One hour, one room</h2>
       </div>
       <dl class="details">
-        <div><dt>Date</dt><dd>November 2026<small>Exact date announced soon on Instagram at <a href="https://www.instagram.com/savoracalicut" target="_blank" rel="noopener">@savoracalicut</a></small></dd></div>
+        <div><dt>Date</dt><dd>13 November 2026<small>Friday</small></dd></div>
         <div><dt>Time</dt><dd>10:30 to 11:30 PM</dd></div>
-        <div><dt>Place</dt><dd>Savora, Kunnamangalam<small>Savora Coffee &amp; Patisserie, Kozhikode · <a href="https://www.google.com/maps?ll=11.304756,75.890165&amp;z=15&amp;t=m&amp;hl=en&amp;gl=IN&amp;mapclient=embed&amp;cid=13398195685996235803" target="_blank" rel="noopener">Open in Google Maps</a></small></dd></div>
+        <div><dt>Place</dt><dd>Savora, Kunnamangalam<small>Savora Coffee &amp; Patisserie, Kozhikode · <a href="https://www.google.com/maps?cid=1555771574546367760" target="_blank" rel="noopener">Open in Google Maps</a></small></dd></div>
         <div><dt>Entry</dt><dd>₹150<small>Includes one coffee from the event menu</small></dd></div>
       </dl>
     </div>
@@ -235,7 +280,6 @@ footer{border-top:1px solid var(--line);padding-top:28px;display:flex;justify-co
         <h2 class="small" id="faq-h">Good to know</h2>
       </div>
       <div>
-        <details id="faq-date"><summary>When will the date be announced?</summary><p>We’ll share the exact date on Instagram at @savoracalicut. If you’ve already messaged us, we’ll tell you on WhatsApp too.</p></details>
         <details id="faq-coffee"><summary>Which coffee is included?</summary><p>Your ₹150 entry includes one coffee from the event menu. We’ll share the menu closer to the night.</p></details>
         <details id="faq-walkin"><summary>Can I just walk in on the night?</summary><p>Entry is by guest list only, so please message us on WhatsApp to request a spot.</p></details>
         <details id="faq-size"><summary>How many people will be there?</summary><p>About 20 guests. We’re keeping it small so there’s room to dance.</p></details>
@@ -291,6 +335,22 @@ footer{border-top:1px solid var(--line);padding-top:28px;display:flex;justify-co
   const fontReady=(document.fonts&&document.fonts.load)?document.fonts.load('800 100px "Big Shoulders Display"').catch(()=>{}):Promise.resolve();
   drawLogo(logo,'#f1e6da');
   fontReady.then(()=>drawLogo(logo,'#f1e6da'));
+
+  /* ---- Countdown to the start: 13 Nov 2026, 10:30 PM India time ---- */
+  const cd=$('countdown');
+  const start=Date.parse('2026-11-13T22:30:00+05:30'), end=Date.parse('2026-11-13T23:30:00+05:30');
+  const nums={};cd.querySelectorAll('[data-u]').forEach(el=>nums[el.dataset.u]=el);
+  const pad=n=>String(n).padStart(2,'0');
+  function tick(){
+    const now=Date.now();
+    if(now>=end){cd.hidden=true;clearInterval(timer);return;}
+    if(now>=start){cd.classList.add('live');cd.querySelector('.cd-label').textContent='The drop is happening now';cd.hidden=false;return;}
+    let s=Math.floor((start-now)/1000);
+    const d=Math.floor(s/86400);s-=d*86400;const h=Math.floor(s/3600);s-=h*3600;const m=Math.floor(s/60);s-=m*60;
+    nums.d.textContent=pad(d);nums.h.textContent=pad(h);nums.m.textContent=pad(m);nums.s.textContent=pad(s);
+    cd.hidden=false;
+  }
+  const timer=setInterval(tick,1000);tick();
 
   /* ---- Fade the MAD ALICE photo in as it scrolls into view ---- */
   const djPhoto=document.querySelector('.dj-photo');
